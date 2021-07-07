@@ -1,0 +1,63 @@
+@startuml
+autonumber
+
+participant "Jenkins" as jenkinsDev << API >>
+participant "Jenkins" as jenkinsProd<< API >>
+
+box "CI" #LightBlue
+	participant "source" as source << Bitbucket >>
+	participant jenkinsDev
+end box
+
+participant Nexus as nexus << Repository >>
+participant "GitOps" as config << Bitbucket >>
+
+box "CD" #LightGreen
+	participant jenkinsProd
+end box
+
+participant "Openshift" as ocp
+
+[-> source: Push
+activate jenkinsDev
+
+source -> jenkinsDev: <<webhooks>> start job
+note right: ocorre apenas para BRANCH: develop e release/*
+
+jenkinsDev --> jenkinsDev: BRANCH_NAME: getBranchName
+jenkinsDev --> jenkinsDev: COMMIT_HASH: getHashCommit
+jenkinsDev --> jenkinsDev: PROJETO: getNomeProjeto
+jenkinsDev --> jenkinsDev: AMBIENTE: getAmbiente
+jenkinsDev --> jenkinsDev: APP_NAME: getNomeAplicação
+jenkinsDev --> source: git clone (${BRANCH_NAME})
+jenkinsDev --> jenkinsDev: mvn package
+jenkinsDev --> jenkinsDev: mvn test
+jenkinsDev --> jenkinsDev: image-build
+jenkinsDev --> jenkinsDev: VERSAO_IMAGEM = ${BRANCH_NAME}-${COMMIT_HASH}
+jenkinsDev --> nexus: tagImage ($PROJETO, $VERSAO_IMAGEM)
+
+group Atualizar Versão Imagem
+    jenkinsDev --> config: git clone branch ${AMBIENTE}
+    jenkinsDev --> jenkinsDev: VALUES = ${PROJETO}/${APP_NAME}/values-${BRANCH_NAME}.yaml
+    jenkinsDev --> jenkinsDev: yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\"" -i ${VALUES}
+        
+    jenkinsDev --> config: git commit -a "[JENKINS] atualizado versao da imagem"
+    jenkinsDev --> config: git push
+end
+
+deactivate jenkinsDev
+
+[-> jenkinsProd: Aprovar para Qualidade (${BRANCH_NAME}))
+activate jenkinsProd
+
+jenkinsProd -> config: git clone (${AMBIENTE})
+jenkinsProd --> jenkinsProd: TEMPLATE=${PROJETO}/${APP_NAME}
+jenkinsProd --> jenkinsProd: helm template $TEMPLATE -f $TEMPLATE/values-${BRANCH_NAME}.yaml --output-dir target
+
+jenkinsProd --> jenkinsProd: NAMESPACE=${PROJETO}-${AMBIENTE}
+jenkinsProd -> ocp: oc -n ${NAMESPACE} apply -f -R target/
+activate ocp
+activate ocp
+
+
+@enduml

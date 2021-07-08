@@ -1,16 +1,14 @@
 @startuml
 
-title Fluxo usando Jenkins + HEML de CICD no ambiente de Qualidade
+title Fluxo usando Jenkins + HELM de CICD no ambiente de Qualidade
 
 autonumber
 
-participant "Jenkins" as jenkinsDev << DEV >> #LightBlue
-participant "Jenkins" as jenkinsProd<< QA >> #LightGreen
 participant "source-code" as source << Bitbucket >> #LightGrey
-participant jenkinsDev
+participant "Jenkins" as jenkinsDev << DEV >> #LightBlue
 participant Nexus as nexus << Repository >> #DarkCyan
 participant "GitOps" as config << Bitbucket >> #Plum
-participant jenkinsProd
+participant "Jenkins" as jenkinsProd<< QA >> #LightGreen
 participant "Openshift" as ocp << nodeSelector=AMBIENTE >>
 
 [-> source: Push
@@ -69,14 +67,17 @@ jenkinsProd --> jenkinsProd: helm template $TEMPLATE -f $TEMPLATE/values-${TAG_N
 jenkinsProd --> jenkinsProd: NAMESPACE=${PROJETO}-${AMBIENTE}
 jenkinsProd -> ocp: oc -n ${NAMESPACE} apply -f -R target/
 activate ocp
-activate ocp
+deactivate ocp
+deactivate jenkinsProd
 
 [->jenkinsProd: JOB gerar Tag GitOps e RELEASE da IMAGEM - SEMPRE antes de promover PRODUÇÃO
+activate jenkinsProd
 jenkinsProd -> source: git MERGE VALIDATE ${BRANCH_NAME} com MASTER
 note right: a depender do processo poderá abortar ou continuar
 
 jenkinsProd -> config: gerarTagGit
 jenkinsProd -> jenkinsProd: SNAPSHOT TO RELEASE
+deactivate jenkinsProd
 
 [-> jenkinsProd: JOB Aprovar para PRODUÇÃO (${TAG_NAME}))
 activate jenkinsProd
@@ -88,7 +89,7 @@ jenkinsProd --> jenkinsProd: helm template $TEMPLATE -f $TEMPLATE/values-PROD.ya
 jenkinsProd --> jenkinsProd: NAMESPACE=${PROJETO}-${AMBIENTE}
 jenkinsProd -> ocp: oc -n ${NAMESPACE} apply -f -R target/
 activate ocp
-activate ocp
-
+deactivate ocp
+deactivate jenkinsProd
 
 @enduml

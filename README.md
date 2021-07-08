@@ -10,6 +10,9 @@
 $ helm create xpto
 ```
 
+## Visão Geral
+
+![Diferença do Deploy entre as Equipes](docs/README.assets/cicd-fluxo-Fluxo_usando_Jenkins___HELM_de_CICD_no_ambiente_de_Desenvolvimento.png)
 
 
 # Múltiplos CICD's da mesma aplicação

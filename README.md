@@ -20,6 +20,8 @@ $ helm create xpto
 
 ## Exemplo do Fluxo de Demanda por Equipe
 
+> Visão do Fluxo para **<u>QA</u>**
+
 ### Equipe A
 
 #### CI
@@ -33,7 +35,7 @@ $ cd gitops-jenkins-helm
 $ PROJETO=silada
 $ APP_NAME=fuse-app-01
 ## Aqui temos a demanda específica da equipe!
-$ BRANCH_NAME=equipe_A-feature_01
+$ BRANCH_NAME=equipe_A-release_01
 $ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
 $ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
 
@@ -55,7 +57,7 @@ $ cd gitops-jenkins-helm
 $ PROJETO=silada
 $ APP_NAME=fuse-app-01
 ## Aqui temos a demanda específica da equipe!
-$ BRANCH_NAME=equipe_A-feature_01
+$ BRANCH_NAME=equipe_A-release_01
 $ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
 $ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
 
@@ -73,7 +75,7 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > ➜  gitops-jenkins-helm git:(qa) ✗ AMBIENTE=qa
 > ➜  gitops-jenkins-helm git:(qa) ✗ PROJETO=silada
 > ➜  gitops-jenkins-helm git:(qa) ✗ APP_NAME=fuse-app-01
-> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_A-feature_01
+> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_A-release_01
 > ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
 > ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
 > ➜  gitops-jenkins-helm git:(qa) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
@@ -82,22 +84,22 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > ➜  gitops-jenkins-helm git:(qa) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
 > ➜  gitops-jenkins-helm git:(qa) ✗ bat $TEMPLATE_VALUES
 > ───────┬──────────────────────────────────────────────────────────────
->        │ File: silada/fuse-app-01/values-equipe_A-feature_01.yaml
+>        │ File: silada/fuse-app-01/values-equipe_A-release_01.yaml
 > ───────┼──────────────────────────────────────────────────────────────
 >    1   │ app:
 >    2   │   image:
->    3   │     tag: equipe_B-feature_01-a6b514ea
->    4   │   namePrefix: equipe_B-feature_01
+>    3   │     tag: equipe_B-release_01-a6b514ea
+>    4   │   namePrefix: equipe_B-release_01
 > ───────┴──────────────────────────────────────────────────────────────
 > 
 > ################################# CD :: Equipe A
 > ➜  gitops-jenkins-helm git:(qa) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
 > 
 > ➜  gitops-jenkins-helm git:(qa) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
-> wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/serviceaccount.yaml
-> wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/service.yaml
-> wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/deployment.yaml
-> wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/tests/test-connection.yaml
+> wrote target/silada/equipe_A-release_01/fuse-app-01/templates/serviceaccount.yaml
+> wrote target/silada/equipe_A-release_01/fuse-app-01/templates/service.yaml
+> wrote target/silada/equipe_A-release_01/fuse-app-01/templates/deployment.yaml
+> wrote target/silada/equipe_A-release_01/fuse-app-01/templates/tests/test-connection.yaml
 > ```
 >
 > 
@@ -115,7 +117,7 @@ $ cd gitops-jenkins-helm
 $ PROJETO=silada
 $ APP_NAME=fuse-app-01
 ## Aqui temos a demanda específica da equipe!
-$ BRANCH_NAME=equipe_B-feature_01
+$ BRANCH_NAME=equipe_B-release_01
 $ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
 $ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
 
@@ -137,7 +139,7 @@ $ cd gitops-jenkins-helm
 $ PROJETO=silada
 $ APP_NAME=fuse-app-01
 ## Aqui temos a demanda específica da equipe!
-$ BRANCH_NAME=equipe_B-feature_01
+$ BRANCH_NAME=equipe_B-release_01
 $ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
 $ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
 
@@ -153,7 +155,7 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > ➜  gitops-jenkins-helm git:(qa) ✗ AMBIENTE=qa
 > ➜  gitops-jenkins-helm git:(qa) ✗ PROJETO=silada
 > ➜  gitops-jenkins-helm git:(qa) ✗ APP_NAME=fuse-app-01
-> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_B-feature_01
+> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_B-release_01
 > ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
 > ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
 > ➜  gitops-jenkins-helm git:(qa) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
@@ -162,12 +164,12 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > ➜  gitops-jenkins-helm git:(qa) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
 > ➜  gitops-jenkins-helm git:(qa) ✗ bat $TEMPLATE_VALUES
 > ───────┬──────────────────────────────────────────────────────────────
->        │ File: silada/fuse-app-01/values-equipe_B-feature_01.yaml
+>        │ File: silada/fuse-app-01/values-equipe_B-release_01.yaml
 > ───────┼──────────────────────────────────────────────────────────────
 >    1   │ app:
 >    2   │   image:
->    3   │     tag: equipe_A-feature_01-85a3eea3
->    4   │   namePrefix: equipe_A-feature_01
+>    3   │     tag: equipe_A-release_01-85a3eea3
+>    4   │   namePrefix: equipe_A-release_01
 > ───────┴──────────────────────────────────────────────────────────────
 > 
 > ################################# CD :: Equipe B
@@ -175,10 +177,10 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > ➜  gitops-jenkins-helm git:(qa) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
 > 
 > ➜  gitops-jenkins-helm git:(qa) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
-> wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/serviceaccount.yaml
-> wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/service.yaml
-> wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/deployment.yaml
-> wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/tests/test-connection.yaml
+> wrote target/silada/equipe_B-release_01/fuse-app-01/templates/serviceaccount.yaml
+> wrote target/silada/equipe_B-release_01/fuse-app-01/templates/service.yaml
+> wrote target/silada/equipe_B-release_01/fuse-app-01/templates/deployment.yaml
+> wrote target/silada/equipe_B-release_01/fuse-app-01/templates/tests/test-connection.yaml
 > ```
 
 
@@ -188,31 +190,31 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 ![Diferença do Deploy entre as Equipes](docs/README.assets/image-20210708142754274.png)
 
 ```diff
-diff target/silada/equipe_A-feature_01/fuse-app-01/templates/deployment.yaml target/silada/equipe_B-feature_01/fuse-app-01/templates/deployment.yaml
+diff target/silada/equipe_A-release_01/fuse-app-01/templates/deployment.yaml target/silada/equipe_B-release_01/fuse-app-01/templates/deployment.yaml
 6c6
-<   name: equipe_A-feature_01-fuse-app-01
+<   name: equipe_A-release_01-fuse-app-01
 ---
->   name: equipe_B-feature_01-fuse-app-01
+>   name: equipe_B-release_01-fuse-app-01
 10c10
-<     app.kubernetes.io/instance: equipe_A-feature_01-fuse-app-01
+<     app.kubernetes.io/instance: equipe_A-release_01-fuse-app-01
 ---
->     app.kubernetes.io/instance: equipe_B-feature_01-fuse-app-01
+>     app.kubernetes.io/instance: equipe_B-release_01-fuse-app-01
 19c19
-<       app.kubernetes.io/instance: equipe_A-feature_01-fuse-app-01
+<       app.kubernetes.io/instance: equipe_A-release_01-fuse-app-01
 ---
->       app.kubernetes.io/instance: equipe_B-feature_01-fuse-app-01
+>       app.kubernetes.io/instance: equipe_B-release_01-fuse-app-01
 24c24
-<         app.kubernetes.io/instance: equipe_A-feature_01-fuse-app-01
+<         app.kubernetes.io/instance: equipe_A-release_01-fuse-app-01
 ---
->         app.kubernetes.io/instance: equipe_B-feature_01-fuse-app-01
+>         app.kubernetes.io/instance: equipe_B-release_01-fuse-app-01
 26c26
-<       serviceAccountName: equipe_A-feature_01-fuse-app-01
+<       serviceAccountName: equipe_A-release_01-fuse-app-01
 ---
->       serviceAccountName: equipe_B-feature_01-fuse-app-01
+>       serviceAccountName: equipe_B-release_01-fuse-app-01
 33c33
-<           image: "nexus-registry-rfelix-cicd.apps.tim.rhbr-lab.com/silada/fuse-app-01:equipe_A-feature_01-85a3eea3"
+<           image: "nexus-registry-rfelix-cicd.apps.tim.rhbr-lab.com/silada/fuse-app-01:equipe_A-release_01-85a3eea3"
 ---
->           image: "nexus-registry-rfelix-cicd.apps.tim.rhbr-lab.com/silada/fuse-app-01:equipe_B-feature_01-a6b514ea"
+>           image: "nexus-registry-rfelix-cicd.apps.tim.rhbr-lab.com/silada/fuse-app-01:equipe_B-release_01-a6b514ea"
 ```
 
 

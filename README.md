@@ -20,7 +20,7 @@ $ helm create xpto
 
 ```shell
 # baixar o repositório na branch do referido ambiente
-$ AMBIENTE=dev
+$ AMBIENTE=qa
 $ PROJETO=silada
 $ APP_NAME=fuse-app-01
 $ BRANCH_NAME=develop

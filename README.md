@@ -26,7 +26,7 @@ $ helm create xpto
 
 ## Exemplo do Fluxo de Demanda por Equipe
 
-> Visão do Fluxo para **<u>PROD</u>**
+> Visão do Fluxo para **<u>PRD</u>**
 
 ### Equipe A
 
@@ -34,7 +34,7 @@ $ helm create xpto
 
 ```shell
 ## baixar o repositório na branch do referido ambiente
-$ AMBIENTE=prod
+$ AMBIENTE=prd
 $ git clone -b $AMBIENTE git@github.com:jovemfelix/gitops-jenkins-helm.git
 $ cd gitops-jenkins-helm
 
@@ -56,17 +56,17 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 
 > ```shell
 > ################################# CI :: Equipe A
-> ➜  gitops-jenkins-helm git:(qa) ✗ AMBIENTE=prod
-> ➜  gitops-jenkins-helm git:(qa) ✗ PROJETO=silada
-> ➜  gitops-jenkins-helm git:(qa) ✗ APP_NAME=fuse-app-01
-> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_A-tag_01
-> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
-> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
-> ➜  gitops-jenkins-helm git:(qa) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
-> ➜  gitops-jenkins-helm git:(qa) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
+> ➜  gitops-jenkins-helm git:(prd) ✗ AMBIENTE=prd
+> ➜  gitops-jenkins-helm git:(prd) ✗ PROJETO=silada
+> ➜  gitops-jenkins-helm git:(prd) ✗ APP_NAME=fuse-app-01
+> ➜  gitops-jenkins-helm git:(prd) ✗ BRANCH_NAME=equipe_A-tag_01
+> ➜  gitops-jenkins-helm git:(prd) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+> ➜  gitops-jenkins-helm git:(prd) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
+> ➜  gitops-jenkins-helm git:(prd) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
+> ➜  gitops-jenkins-helm git:(prd) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
 > ################################# Atualizar a versão da image e prefixo a ser usado
-> ➜  gitops-jenkins-helm git:(qa) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
-> ➜  gitops-jenkins-helm git:(qa) ✗ bat $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(prd) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(prd) ✗ bat $TEMPLATE_VALUES
 > ───────┬──────────────────────────────────────────────────────────────
 >        │ File: silada/fuse-app-01/values-equipe_A-tag_01.yaml
 > ───────┼──────────────────────────────────────────────────────────────
@@ -77,9 +77,9 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > ───────┴──────────────────────────────────────────────────────────────
 > 
 > ################################# CD :: Equipe A
-> ➜  gitops-jenkins-helm git:(qa) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
+> ➜  gitops-jenkins-helm git:(prd) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
 > 
-> ➜  gitops-jenkins-helm git:(qa) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
+> ➜  gitops-jenkins-helm git:(prd) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
 > wrote target/silada/equipe_A-tag_01/fuse-app-01/templates/serviceaccount.yaml
 > wrote target/silada/equipe_A-tag_01/fuse-app-01/templates/service.yaml
 > wrote target/silada/equipe_A-tag_01/fuse-app-01/templates/deployment.yaml
@@ -92,7 +92,7 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 
 ```shell
 ## baixar o repositório na branch do referido ambiente
-$ AMBIENTE=prod
+$ AMBIENTE=prd
 $ git clone -b $AMBIENTE git@github.com:jovemfelix/gitops-jenkins-helm.git
 $ cd gitops-jenkins-helm
 
@@ -112,17 +112,17 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 
 > ```shell
 > ################################# CI :: Equipe B
-> ➜  gitops-jenkins-helm git:(qa) ✗ AMBIENTE=prod
-> ➜  gitops-jenkins-helm git:(qa) ✗ PROJETO=silada
-> ➜  gitops-jenkins-helm git:(qa) ✗ APP_NAME=fuse-app-01
-> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_B-tag_01
-> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
-> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
-> ➜  gitops-jenkins-helm git:(qa) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
-> ➜  gitops-jenkins-helm git:(qa) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
+> ➜  gitops-jenkins-helm git:(prd) ✗ AMBIENTE=prd
+> ➜  gitops-jenkins-helm git:(prd) ✗ PROJETO=silada
+> ➜  gitops-jenkins-helm git:(prd) ✗ APP_NAME=fuse-app-01
+> ➜  gitops-jenkins-helm git:(prd) ✗ BRANCH_NAME=equipe_B-tag_01
+> ➜  gitops-jenkins-helm git:(prd) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+> ➜  gitops-jenkins-helm git:(prd) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
+> ➜  gitops-jenkins-helm git:(prd) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
+> ➜  gitops-jenkins-helm git:(prd) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
 > ################################# Atualizar a versão da image e prefixo a ser usado
-> ➜  gitops-jenkins-helm git:(qa) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
-> ➜  gitops-jenkins-helm git:(qa) ✗ bat $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(prd) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(prd) ✗ bat $TEMPLATE_VALUES
 > ───────┬──────────────────────────────────────────────────────────────
 >        │ File: silada/fuse-app-01/values-equipe_B-tag_01.yaml
 > ───────┼──────────────────────────────────────────────────────────────
@@ -134,9 +134,9 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > 
 > ################################# CD :: Equipe B
 > 
-> ➜  gitops-jenkins-helm git:(qa) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
+> ➜  gitops-jenkins-helm git:(prd) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
 > 
-> ➜  gitops-jenkins-helm git:(qa) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
+> ➜  gitops-jenkins-helm git:(prd) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
 > wrote target/silada/equipe_B-tag_01/fuse-app-01/templates/serviceaccount.yaml
 > wrote target/silada/equipe_B-tag_01/fuse-app-01/templates/service.yaml
 > wrote target/silada/equipe_B-tag_01/fuse-app-01/templates/deployment.yaml

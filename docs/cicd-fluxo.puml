@@ -26,7 +26,7 @@ activate jenkinsProd
 
 jenkinsProd -> config: git clone branch ${AMBIENTE}
 jenkinsProd --> jenkinsProd: TEMPLATE=${PROJETO}/${APP_NAME}
-jenkinsProd --> jenkinsProd: helm template $TEMPLATE -f $TEMPLATE/values-PROD.yaml --output-dir target
+jenkinsProd --> jenkinsProd: helm template $TEMPLATE -f $TEMPLATE/values-PRD.yaml --output-dir target
 
 jenkinsProd --> jenkinsProd: NAMESPACE=${PROJETO}-${AMBIENTE}
 jenkinsProd -> ocp: oc -n ${NAMESPACE} apply -f -R target/

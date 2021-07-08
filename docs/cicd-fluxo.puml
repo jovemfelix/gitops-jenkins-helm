@@ -42,8 +42,8 @@ group Atualizar Versão Imagem no ambiente de QUALIDADE
 end
 
 group Atualizar Versão Imagem no ambiente de PRODUÇÃO
-    jenkinsDev --> config: git clone branch PROD
-    jenkinsDev --> jenkinsDev: VALUES = ${PROJETO}/${APP_NAME}/values-PROD.yaml
+    jenkinsDev --> config: git clone branch PRD
+    jenkinsDev --> jenkinsDev: VALUES = ${PROJETO}/${APP_NAME}/values-PRD.yaml
     jenkinsDev --> jenkinsDev: yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\"" -i ${VALUES}
     note right: deverá criar o arquivo caso não exista!
 
@@ -84,7 +84,7 @@ activate jenkinsProd
 
 jenkinsProd -> config: git clone branch ${AMBIENTE}
 jenkinsProd --> jenkinsProd: TEMPLATE=${PROJETO}/${APP_NAME}
-jenkinsProd --> jenkinsProd: helm template $TEMPLATE -f $TEMPLATE/values-PROD.yaml --output-dir target
+jenkinsProd --> jenkinsProd: helm template $TEMPLATE -f $TEMPLATE/values-PRD.yaml --output-dir target
 
 jenkinsProd --> jenkinsProd: NAMESPACE=${PROJETO}-${AMBIENTE}
 jenkinsProd -> ocp: oc -n ${NAMESPACE} apply -f -R target/

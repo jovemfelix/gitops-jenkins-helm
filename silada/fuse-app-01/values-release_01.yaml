@@ -1,9 +1,0 @@
-# Default values for fuseapp.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-app:
-  namePrefix: release_01-
-  image:
-    # Overrides the image tag
-    tag: release_01-5fd74e42dac91dac6f6de4946b1d4e

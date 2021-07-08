@@ -12,80 +12,210 @@ $ helm create xpto
 
 
 
-## Múltiplos CICD's da mesma aplicação
+# Múltiplos CICD's da mesma aplicação
 
 > será explicado tendo como base a aplicação **fuse-app-01**
 
-### CI
+
+
+## Exemplo do Fluxo de Demanda por Equipe
+
+> Visão do Fluxo para **<u>DEV</u>**
+
+### Equipe A
+
+#### CI
 
 ```shell
-# baixar o repositório na branch do referido ambiente
+## baixar o repositório na branch do referido ambiente
 $ AMBIENTE=dev
+$ git clone -b $AMBIENTE git@github.com:jovemfelix/gitops-jenkins-helm.git
+$ cd gitops-jenkins-helm
+
 $ PROJETO=silada
 $ APP_NAME=fuse-app-01
-$ BRANCH_NAME=develop
+## Aqui temos a demanda específica da equipe!
+$ BRANCH_NAME=equipe_A-feature_01
+$ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+$ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
 
-$ git clone -b $AMBIENTE git@github.com:jovemfelix/gitops-jenkins-helm.git
-$ VERSAO_IMAGEM = ${BRANCH_NAME}-${GIT_COMMIT_HASH}
-$ TEMPLATE=${PROJETO}/${APP_NAME}/values-${BRANCH_NAME}.yaml
-
-# atualizar o valor da variavel com a imagem gerada
-$ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\"" -i $TEMPLATE
+## atualizar o valor da variável com a imagem gerada
+# GIT_COMMIT_HASH=$(openssl rand -hex 4)
+# GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
+$ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
+$ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
 ```
 
-
-
-### CD
+#### CD
 
 ```shell
-# A seguir temos o output para o caso geral, ou seja será usado "values.yaml"
-$ AMBIENTE=qa
+## baixar o repositório na branch do referido ambiente
+$ AMBIENTE=dev
+$ git clone -b $AMBIENTE git@github.com:jovemfelix/gitops-jenkins-helm.git
+$ cd gitops-jenkins-helm
+
 $ PROJETO=silada
 $ APP_NAME=fuse-app-01
-$ BRANCH_NAME=release_01
+## Aqui temos a demanda específica da equipe!
+$ BRANCH_NAME=equipe_A-feature_01
+$ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+$ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
 
-# baixar o repositório na branch do referido ambiente
-$ git clone -b $AMBIENTE git@github.com:jovemfelix/gitops-jenkins-helm.git
-$ TEMPLATE=${PROJETO}/${APP_NAME}
-
+## gerar os artefatos de deploy
 $ SAIDA=target/${PROJETO}/${BRANCH_NAME}
-
-$ helm template $TEMPLATE --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} \
-  -f $TEMPLATE/values-${BRANCH_NAME}.yaml
-
-# Agora imagina que que temos 02 equipes trabalhando com features específicas do mesmo sistema
-## para 2ª release, temos:
-$ FEATURE='feature_01'
-$ helm template $TEMPLATE --namespace $PROJETO --output-dir $SAIDA/$FEATURE --name-template ${FEATURE}fuse-app-01 -f cd/sil/fuse-app-01/values-${FEATURE}.yaml
-
-## para 3ª release, temos:
-$ FEATURE='feature_02'
-$ helm template $TEMPLATE --namespace $PROJETO --output-dir $SAIDA/$FEATURE --name-template ${FEATURE}fuse-app-01 -f cd/sil/fuse-app-01/values-${FEATURE}.yaml
+$ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
 ```
 
-> Resultado da execução
+
+
+#### Resultado da execução
+
+> ```shell
+> ################################# CI :: Equipe A
+> ➜  gitops-jenkins-helm git:(qa) ✗ AMBIENTE=dev
+> ➜  gitops-jenkins-helm git:(qa) ✗ PROJETO=silada
+> ➜  gitops-jenkins-helm git:(qa) ✗ APP_NAME=fuse-app-01
+> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_A-feature_01
+> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
+> ➜  gitops-jenkins-helm git:(qa) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
+> ➜  gitops-jenkins-helm git:(qa) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
+> ################################# Atualizar a versão da image e prefixo a ser usado
+> ➜  gitops-jenkins-helm git:(qa) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(qa) ✗ bat $TEMPLATE_VALUES
+> ───────┬──────────────────────────────────────────────────────────────
+>        │ File: silada/fuse-app-01/values-equipe_A-feature_01.yaml
+> ───────┼──────────────────────────────────────────────────────────────
+>    1   │ app:
+>    2   │   image:
+>    3   │     tag: equipe_B-feature_01-a6b514ea
+>    4   │   namePrefix: equipe_B-feature_01
+> ───────┴──────────────────────────────────────────────────────────────
+> 
+> ################################# CD :: Equipe A
+> ➜  gitops-jenkins-helm git:(qa) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
+> 
+> ➜  gitops-jenkins-helm git:(qa) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
+> wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/serviceaccount.yaml
+> wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/service.yaml
+> wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/deployment.yaml
+> wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/tests/test-connection.yaml
+> ```
 >
-> ![image-20210707122049753](README.assets/image-20210707122049753.png)
+> 
+
+### Equipe B
+
+#### CI
+
+```shell
+## baixar o repositório na branch do referido ambiente
+$ AMBIENTE=dev
+$ git clone -b $AMBIENTE git@github.com:jovemfelix/gitops-jenkins-helm.git
+$ cd gitops-jenkins-helm
+
+$ PROJETO=silada
+$ APP_NAME=fuse-app-01
+## Aqui temos a demanda específica da equipe!
+$ BRANCH_NAME=equipe_B-feature_01
+$ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+$ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
+
+## atualizar o valor da variável com a imagem gerada
+# GIT_COMMIT_HASH=$(openssl rand -hex 4)
+# GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
+$ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
+$ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
+```
+
+#### CD
+
+```shell
+## baixar o repositório na branch do referido ambiente
+$ AMBIENTE=dev
+$ git clone -b $AMBIENTE git@github.com:jovemfelix/gitops-jenkins-helm.git
+$ cd gitops-jenkins-helm
+
+$ PROJETO=silada
+$ APP_NAME=fuse-app-01
+## Aqui temos a demanda específica da equipe!
+$ BRANCH_NAME=equipe_B-feature_01
+$ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+$ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
+
+## gerar os artefatos de deploy
+$ SAIDA=target/${PROJETO}/${BRANCH_NAME}
+$ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
+```
+
+#### Resultado da execução
+
+> ```shell
+> ################################# CI :: Equipe B
+> ➜  gitops-jenkins-helm git:(qa) ✗ AMBIENTE=dev
+> ➜  gitops-jenkins-helm git:(qa) ✗ PROJETO=silada
+> ➜  gitops-jenkins-helm git:(qa) ✗ APP_NAME=fuse-app-01
+> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_B-feature_01
+> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
+> ➜  gitops-jenkins-helm git:(qa) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
+> ➜  gitops-jenkins-helm git:(qa) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
+> ################################# Atualizar a versão da image e prefixo a ser usado
+> ➜  gitops-jenkins-helm git:(qa) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(qa) ✗ bat $TEMPLATE_VALUES
+> ───────┬──────────────────────────────────────────────────────────────
+>        │ File: silada/fuse-app-01/values-equipe_B-feature_01.yaml
+> ───────┼──────────────────────────────────────────────────────────────
+>    1   │ app:
+>    2   │   image:
+>    3   │     tag: equipe_A-feature_01-85a3eea3
+>    4   │   namePrefix: equipe_A-feature_01
+> ───────┴──────────────────────────────────────────────────────────────
+> 
+> ################################# CD :: Equipe B
+> 
+> ➜  gitops-jenkins-helm git:(qa) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
+> 
+> ➜  gitops-jenkins-helm git:(qa) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
+> wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/serviceaccount.yaml
+> wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/service.yaml
+> wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/deployment.yaml
+> wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/tests/test-connection.yaml
+> ```
 
 
 
+### Diferença do Deployment entre as Equipes
 
+![Diferença do Deploy entre as Equipes](docs/README.assets/image-20210708142754275.png)
 
-> Veja a diferença a seguir a diferenças:
->
-> * Do **default** (que é o correspondente ao padrão do ambiente) ***VS*** **feature_01**
->
-> ![image-20210707122345453](README.assets/image-20210707122345453.png)
->
-> Do **default** (que é o correspondente ao padrão do ambiente) ***VS*** **feature_02**
->
-> ![image-20210707122450009](README.assets/image-20210707122450009.png)
->
-> * Da **feature_01** ***VS*** **feature_02**
->
-> ![image-20210707122606089](README.assets/image-20210707122606089.png)
->
-> Conclusão teremos distintos **deployments** para a "mesma" aplicação.
+```diff
+diff target/silada/equipe_A-feature_01/fuse-app-01/templates/deployment.yaml target/silada/equipe_B-feature_01/fuse-app-01/templates/deployment.yaml
+6c6
+<   name: equipe_A-feature_01-fuse-app-01
+---
+>   name: equipe_B-feature_01-fuse-app-01
+10c10
+<     app.kubernetes.io/instance: equipe_A-feature_01-fuse-app-01
+---
+>     app.kubernetes.io/instance: equipe_B-feature_01-fuse-app-01
+19c19
+<       app.kubernetes.io/instance: equipe_A-feature_01-fuse-app-01
+---
+>       app.kubernetes.io/instance: equipe_B-feature_01-fuse-app-01
+24c24
+<         app.kubernetes.io/instance: equipe_A-feature_01-fuse-app-01
+---
+>         app.kubernetes.io/instance: equipe_B-feature_01-fuse-app-01
+26c26
+<       serviceAccountName: equipe_A-feature_01-fuse-app-01
+---
+>       serviceAccountName: equipe_B-feature_01-fuse-app-01
+33c33
+<           image: "nexus-registry-rfelix-cicd.apps.tim.rhbr-lab.com/silada/fuse-app-01:equipe_A-feature_01-85a3eea3"
+---
+>           image: "nexus-registry-rfelix-cicd.apps.tim.rhbr-lab.com/silada/fuse-app-01:equipe_B-feature_01-a6b514ea"
+```
 
 
 

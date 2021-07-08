@@ -75,17 +75,17 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 
 > ```shell
 > ################################# CI :: Equipe A
-> ➜  gitops-jenkins-helm git:(qa) ✗ AMBIENTE=dev
-> ➜  gitops-jenkins-helm git:(qa) ✗ PROJETO=silada
-> ➜  gitops-jenkins-helm git:(qa) ✗ APP_NAME=fuse-app-01
-> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_A-feature_01
-> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
-> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
-> ➜  gitops-jenkins-helm git:(qa) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
-> ➜  gitops-jenkins-helm git:(qa) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
+> ➜  gitops-jenkins-helm git:(dev) ✗ AMBIENTE=dev
+> ➜  gitops-jenkins-helm git:(dev) ✗ PROJETO=silada
+> ➜  gitops-jenkins-helm git:(dev) ✗ APP_NAME=fuse-app-01
+> ➜  gitops-jenkins-helm git:(dev) ✗ BRANCH_NAME=equipe_A-feature_01
+> ➜  gitops-jenkins-helm git:(dev) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+> ➜  gitops-jenkins-helm git:(dev) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
+> ➜  gitops-jenkins-helm git:(dev) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
+> ➜  gitops-jenkins-helm git:(dev) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
 > ################################# Atualizar a versão da image e prefixo a ser usado
-> ➜  gitops-jenkins-helm git:(qa) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
-> ➜  gitops-jenkins-helm git:(qa) ✗ bat $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(dev) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(dev) ✗ bat $TEMPLATE_VALUES
 > ───────┬──────────────────────────────────────────────────────────────
 >        │ File: silada/fuse-app-01/values-equipe_A-feature_01.yaml
 > ───────┼──────────────────────────────────────────────────────────────
@@ -96,9 +96,9 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > ───────┴──────────────────────────────────────────────────────────────
 > 
 > ################################# CD :: Equipe A
-> ➜  gitops-jenkins-helm git:(qa) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
+> ➜  gitops-jenkins-helm git:(dev) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
 > 
-> ➜  gitops-jenkins-helm git:(qa) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
+> ➜  gitops-jenkins-helm git:(dev) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
 > wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/serviceaccount.yaml
 > wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/service.yaml
 > wrote target/silada/equipe_A-feature_01/fuse-app-01/templates/deployment.yaml
@@ -155,17 +155,17 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 
 > ```shell
 > ################################# CI :: Equipe B
-> ➜  gitops-jenkins-helm git:(qa) ✗ AMBIENTE=dev
-> ➜  gitops-jenkins-helm git:(qa) ✗ PROJETO=silada
-> ➜  gitops-jenkins-helm git:(qa) ✗ APP_NAME=fuse-app-01
-> ➜  gitops-jenkins-helm git:(qa) ✗ BRANCH_NAME=equipe_B-feature_01
-> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
-> ➜  gitops-jenkins-helm git:(qa) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
-> ➜  gitops-jenkins-helm git:(qa) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
-> ➜  gitops-jenkins-helm git:(qa) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
+> ➜  gitops-jenkins-helm git:(dev) ✗ AMBIENTE=dev
+> ➜  gitops-jenkins-helm git:(dev) ✗ PROJETO=silada
+> ➜  gitops-jenkins-helm git:(dev) ✗ APP_NAME=fuse-app-01
+> ➜  gitops-jenkins-helm git:(dev) ✗ BRANCH_NAME=equipe_B-feature_01
+> ➜  gitops-jenkins-helm git:(dev) ✗ TEMPLATE_DIR=${PROJETO}/${APP_NAME}
+> ➜  gitops-jenkins-helm git:(dev) ✗ TEMPLATE_VALUES=${TEMPLATE_DIR}/values-${BRANCH_NAME}.yaml
+> ➜  gitops-jenkins-helm git:(dev) ✗ GIT_COMMIT_HASH=$(openssl rand -hex 4)
+> ➜  gitops-jenkins-helm git:(dev) ✗ VERSAO_IMAGEM=${BRANCH_NAME}-${GIT_COMMIT_HASH}
 > ################################# Atualizar a versão da image e prefixo a ser usado
-> ➜  gitops-jenkins-helm git:(qa) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
-> ➜  gitops-jenkins-helm git:(qa) ✗ bat $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(dev) ✗ yq eval "(.app.image.tag)|=\"$VERSAO_IMAGEM\" | (.app.namePrefix)|=\"$BRANCH_NAME\"" -n > $TEMPLATE_VALUES
+> ➜  gitops-jenkins-helm git:(dev) ✗ bat $TEMPLATE_VALUES
 > ───────┬──────────────────────────────────────────────────────────────
 >        │ File: silada/fuse-app-01/values-equipe_B-feature_01.yaml
 > ───────┼──────────────────────────────────────────────────────────────
@@ -177,9 +177,9 @@ $ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-te
 > 
 > ################################# CD :: Equipe B
 > 
-> ➜  gitops-jenkins-helm git:(qa) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
+> ➜  gitops-jenkins-helm git:(dev) ✗ SAIDA=target/${PROJETO}/${BRANCH_NAME}
 > 
-> ➜  gitops-jenkins-helm git:(qa) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
+> ➜  gitops-jenkins-helm git:(dev) ✗ helm template $TEMPLATE_DIR --namespace $PROJETO --output-dir $SAIDA --name-template ${BRANCH_NAME}-${APP_NAME} -f ${TEMPLATE_VALUES}
 > wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/serviceaccount.yaml
 > wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/service.yaml
 > wrote target/silada/equipe_B-feature_01/fuse-app-01/templates/deployment.yaml

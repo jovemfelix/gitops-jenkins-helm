@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 app:
-  namePrefix: release_01-
+  namePrefix: time_A-
   image:
-    # Overrides the image tag
-    tag: release_01-5fd74e42dac91dac6f6de4946b1d4e
+    tag: feature_01-dfc174aa6435d239e97ee0e928e07e

@@ -11,6 +11,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "fuseapp.fullname" -}}
+{{- printf "%s-%s" .Values.app.namePrefix .Chart.Name}}
+{{- end }}
+
+
+{{- define "fuseapp.fullname2" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}

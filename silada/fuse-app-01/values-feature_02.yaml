@@ -1,0 +1,10 @@
+# Default values for fuseapp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+app:
+  namePrefix: time_B-
+  image:
+    tag: feature_02-e2a4bfc170d55866d3ec470256138f
+    ## ex de outras necessidades
+    registry: xpto.apps.tim.rhbr-lab.com

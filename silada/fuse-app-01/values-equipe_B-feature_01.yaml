@@ -1,0 +1,4 @@
+app:
+  image:
+    tag: equipe_B-feature_01-a6b514ea
+  namePrefix: equipe_B-feature_01

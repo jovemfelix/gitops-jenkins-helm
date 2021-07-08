@@ -1,0 +1,4 @@
+app:
+  image:
+    tag: equipe_A-feature_01-85a3eea3
+  namePrefix: equipe_A-feature_01
